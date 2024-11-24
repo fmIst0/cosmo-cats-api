@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: cosmo-cats-api
+
+springdoc:
+  swagger-ui:
+    enabled: true
+  api-docs:
+    enabled: true

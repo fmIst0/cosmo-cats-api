@@ -1,0 +1,110 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "0.8.11"
+    reportsDirectory = layout.buildDirectory.dir("reports/coverage")
+}
+
+tasks.register('integrationTest', Test) {
+    description = "Defines the test type 'integrationTest' for thin integration test"
+}
+
+jacocoTestCoverageVerification {
+    description = "Verifies coverage based on defined thresholds on all tests (incl. Unit and Integration))"
+    executionData = fileTree(layout.buildDirectory).include("/jacoco/*.exec")
+    violationRules {
+        rule {
+            enabled = true
+            failOnViolation = true
+            element = 'SOURCEFILE'
+            excludes = [
+                    'com/example/cosmocatsapi/dto/category/CategoryDto.java',
+                    'com/example/cosmocatsapi/service/mappers/ProductMapper.java',
+                    'com/example/cosmocatsapi/config/WebConfig.java',
+                    'com/example/cosmocatsapi/config/MapperConfig.java',
+                    'com/example/cosmocatsapi/CosmoCatsApiApplication.java',
+                    'com/example/cosmocatsapi/service/exception/ProductNotFoundException.java',
+                    'com/example/cosmocatsapi/common/ProductStatus.java',
+                    'com/example/cosmocatsapi/common/OrderStatus.java',
+                    'com/example/cosmocatsapi/dto/order/OrderRequestDto.java',
+                    'com/example/cosmocatsapi/dto/order/OrderResponseDto.java',
+                    'com/example/cosmocatsapi/dto/order/OrderItemDto.java',
+                    'com/example/cosmocatsapi/web/GlobalExceptionHandler.java',
+                    'com/example/cosmocatsapi/dto/product/ProductRequestDto.java',
+                    'com/example/cosmocatsapi/dto/product/ProductResponseDto.java',
+                    'com/example/cosmocatsapi/service/impl/ProductServiceImpl.java',
+                    'com/example/cosmocatsapi/dto/validation/CosmicWordCheckValidator.java',
+                    'com/example/cosmocatsapi/dto/validation/CosmicWordCheck.java',
+                    'com/example/cosmocatsapi/web/ProductController.java',
+                    'com/example/cosmocatsapi/service/mappers/impl/ProductMapperImpl.java',
+                    'com/example/cosmocatsapi/domain/Product.java',
+                    'com/example/cosmocatsapi/domain/Category.java',
+                    'com/example/cosmocatsapi/domain/OrderItem.java',
+                    'com/example/cosmocatsapi/domain/Order.java',
+                    'com/example/cosmocatsapi/service/CategoryService.java',
+                    'com/example/cosmocatsapi/service/OrderService.java',
+                    'com/example/cosmocatsapi/service/ProductService.java',
+                    'com/example/cosmocatsapi/web/exception/ExDetails.java',
+                    'com/example/cosmocatsapi/web/utils/DetailsUtils.java',
+            ]
+            limit {
+                counter = 'LINE'
+                minimum = 80
+            }
+        }
+    }
+}
+
+jacocoTestReport {
+    group = "Reporting"
+    description = "Creates the result report of the Unit Test"
+    getExecutionData().setFrom(fileTree(layout.buildDirectory).include("/jacoco/*.exec"))
+    reports {
+        csv.required = true
+        xml.required = false
+        html.required = true
+        xml.outputLocation = layout.buildDirectory.file("reports/coverage/coverage.xml").get().asFile
+        html.outputLocation = layout.buildDirectory.dir("reports/coverage")
+        csv.outputLocation = layout.buildDirectory.file("reports/coverage/coverage.csv").get().asFile
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['src/main/java/MapperConfig.java', 'src/main/java/CosmoCatsApiApplication.java', 'src/main/java/ProductNotFoundException.java', 'src/main/java/OrderStatus.java', 'src/main/java/ProductController.java', 'src/main/java/GlobalExceptionHandler.java', 'src/main/java/CosmicWordCheckValidator.java', 'src/main/java/ProductMapperImpl.java'])
+        }))
+    }
+    finalizedBy jacocoTestCoverageVerification
+}
+
+tasks.register('jacocoIntegrationTestReport', JacocoReport) {
+    dependsOn integrationTest
+    group = "Reporting"
+    description = "Creates the result report of the (Thin) Integration Test"
+    getExecutionData().setFrom(fileTree(layout.buildDirectory).include("/jacoco/integrationTest.exec"))
+    classDirectories.setFrom(tasks.jacocoTestReport.classDirectories)
+    reports {
+        csv.required = true
+        xml.required = false
+        html.required = true
+        xml.outputLocation = layout.buildDirectory.file("reports/coverage/coverageIT.xml").get().asFile
+        html.outputLocation = layout.buildDirectory.dir("reports/coverage")
+        csv.outputLocation = layout.buildDirectory.file("reports/coverage/coverageIT.csv").get().asFile
+    }
+}
+
+test {
+    filter {
+        excludeTestsMatching '*IT'
+    }
+    finalizedBy jacocoTestReport // отчет всегда создается после завершения тестов
+}
+
+integrationTest {
+    maxParallelForks = 4
+    filter {
+        includeTestsMatching '*IT'
+    }
+    finalizedBy tasks.jacocoIntegrationTestReport // отчет всегда создается после завершения тестов
+}
+
+jacocoTestCoverageVerification.dependsOn jacocoTestReport
+test.dependsOn jacocoIntegrationTestReport
