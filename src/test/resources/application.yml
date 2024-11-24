@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: cosmo-cats-api
+
+tests:
+  unit-tests:
+    enabled: true
