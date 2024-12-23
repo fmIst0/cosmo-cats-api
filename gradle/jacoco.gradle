@@ -46,6 +46,7 @@ jacocoTestCoverageVerification {
                     'com/example/cosmocatsapi/service/ProductService.java',
                     'com/example/cosmocatsapi/web/exception/ExDetails.java',
                     'com/example/cosmocatsapi/web/utils/DetailsUtils.java',
+                    'com/example/cosmocatsapi/dto/validation/Group.java'
             ]
             limit {
                 counter = 'LINE'

@@ -10,7 +10,7 @@ import lombok.Value;
 @Value
 @Builder
 public class OrderResponseDto {
-    long id;
+    String id;
     String name;
     String address;
     String phone;

@@ -57,15 +57,15 @@ class ProductServiceImplTest {
     @DisplayName("Verify getAllProducts() returns a list of products")
     public void getAllProducts_ShouldReturnProductList() {
         // Given
-        Product product1 = Product.builder().id(1).name("Product 1").description("Description 1")
-                .price(BigDecimal.valueOf(5)).productStatus(ProductStatus.IN_STOCK).categoryId(1).build();
-        Product product2 = Product.builder().id(2).name("Product 2").description("Description 2")
-                .price(BigDecimal.valueOf(10)).productStatus(ProductStatus.DISCONTINUED).categoryId(2).build();
+        Product product1 = Product.builder().id("1").name("Product 1").description("Description 1")
+                .price(BigDecimal.valueOf(5)).productStatus(ProductStatus.IN_STOCK).categoryId("1").build();
+        Product product2 = Product.builder().id("2").name("Product 2").description("Description 2")
+                .price(BigDecimal.valueOf(10)).productStatus(ProductStatus.DISCONTINUED).categoryId("2").build();
 
-        ProductResponseDto responseDto1 = ProductResponseDto.builder().id(1).name("Product 1")
-                .description("Description 1").price(BigDecimal.valueOf(5)).productStatus(ProductStatus.IN_STOCK).categoryId(1).build();
-        ProductResponseDto responseDto2 = ProductResponseDto.builder().id(2).name("Product 2")
-                .description("Description 2").price(BigDecimal.valueOf(10)).productStatus(ProductStatus.DISCONTINUED).categoryId(2).build();
+        ProductResponseDto responseDto1 = ProductResponseDto.builder().id("1").name("Product 1")
+                .description("Description 1").price(BigDecimal.valueOf(5)).productStatus(ProductStatus.IN_STOCK).categoryId("1").build();
+        ProductResponseDto responseDto2 = ProductResponseDto.builder().id("2").name("Product 2")
+                .description("Description 2").price(BigDecimal.valueOf(10)).productStatus(ProductStatus.DISCONTINUED).categoryId("2").build();
 
         when(productMapper.toProductResponseDto(product1)).thenReturn(responseDto1);
         when(productMapper.toProductResponseDto(product2)).thenReturn(responseDto2);
@@ -85,11 +85,11 @@ class ProductServiceImplTest {
     @DisplayName("Verify getProductById() returns the correct product")
     public void getProductById_ValidId_ShouldReturnProduct() {
         // Given
-        Long productId = 1L;
-        Product product = Product.builder().id(1).name("Product 1").description("Description 1")
-                .price(BigDecimal.valueOf(5)).productStatus(ProductStatus.IN_STOCK).categoryId(1).build();
-        ProductResponseDto responseDto = ProductResponseDto.builder().id(1).name("Product 1")
-                .description("Description 1").price(BigDecimal.valueOf(5)).productStatus(ProductStatus.IN_STOCK).categoryId(1).build();
+        String productId = "1";
+        Product product = Product.builder().id("1").name("Product 1").description("Description 1")
+                .price(BigDecimal.valueOf(5)).productStatus(ProductStatus.IN_STOCK).categoryId("1").build();
+        ProductResponseDto responseDto = ProductResponseDto.builder().id("1").name("Product 1")
+                .description("Description 1").price(BigDecimal.valueOf(5)).productStatus(ProductStatus.IN_STOCK).categoryId("1").build();
 
         when(productMapper.toProductResponseDto(product)).thenReturn(responseDto);
 
@@ -107,7 +107,7 @@ class ProductServiceImplTest {
     @DisplayName("Verify getProductById() throws exception when product is not found")
     public void getProductById_InvalidId_ShouldThrowException() {
         // Given
-        Long invalidProductId = 999L;
+        String invalidProductId = "999";
 
         // When & Then
         assertThrows(ProductNotFoundException.class, () -> productService.getProductById(invalidProductId));
@@ -117,16 +117,16 @@ class ProductServiceImplTest {
     @DisplayName("Verify updateProduct() updates and returns the product")
     public void updateProduct_ValidIdAndRequest_ShouldReturnUpdatedProduct() {
         // Given
-        Long productId = 1L;
+        String productId = "1";
         ProductRequestDto requestDto = ProductRequestDto.builder().name("Updated Name")
                 .description("Updated Description").price(BigDecimal.valueOf(15))
-                .productStatus(ProductStatus.DISCONTINUED).categoryId(2).build();
+                .productStatus(ProductStatus.DISCONTINUED).categoryId("2").build();
         Product productToUpdate = Product.builder().name("Updated Name")
                 .description("Updated Description").price(BigDecimal.valueOf(15))
-                .productStatus(ProductStatus.DISCONTINUED).categoryId(2).build();
-        ProductResponseDto responseDto = ProductResponseDto.builder().id(1).name("Updated Name")
+                .productStatus(ProductStatus.DISCONTINUED).categoryId("2").build();
+        ProductResponseDto responseDto = ProductResponseDto.builder().id("1").name("Updated Name")
                 .description("Updated Description").price(BigDecimal.valueOf(15))
-                .productStatus(ProductStatus.DISCONTINUED).categoryId(2).build();
+                .productStatus(ProductStatus.DISCONTINUED).categoryId("2").build();
 
         when(productMapper.toProductResponseDto(any()))
                 .thenReturn(responseDto);
@@ -146,7 +146,7 @@ class ProductServiceImplTest {
     @DisplayName("Verify deleteProduct() removes the product")
     public void deleteProduct_ValidId_ShouldRemoveProduct() {
         // Given
-        Long productId = 1L;
+        String productId = "1";
 
         // When
         productService.deleteProduct(productId);
@@ -162,17 +162,17 @@ class ProductServiceImplTest {
                 .description("Test")
                 .price(BigDecimal.valueOf(5))
                 .productStatus(ProductStatus.IN_STOCK)
-                .categoryId(1)
+                .categoryId("1")
                 .build();
     }
 
     private ProductResponseDto getProductResponseDto() {
-        return ProductResponseDto.builder().id(9999999)
+        return ProductResponseDto.builder().id("9999999")
                 .name("Test")
                 .description("Test")
                 .price(BigDecimal.valueOf(5))
                 .productStatus(ProductStatus.IN_STOCK)
-                .categoryId(1)
+                .categoryId("1")
                 .build();
     }
 }

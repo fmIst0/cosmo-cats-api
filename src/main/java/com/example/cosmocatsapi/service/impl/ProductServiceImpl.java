@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.example.cosmocatsapi.service.ProductService;
@@ -22,35 +23,35 @@ public class ProductServiceImpl implements ProductService {
     private final Random random = new Random();
     private final List<Product> products = new ArrayList<>(Arrays.asList(
             Product.builder()
-                    .id(1)
+                    .id("1")
                     .name("Product 1")
                     .description("Description 1")
                     .price(BigDecimal.valueOf(5))
                     .productStatus(ProductStatus.IN_STOCK)
-                    .categoryId(1)
+                    .categoryId("1")
                     .build(),
             Product.builder()
-                    .id(2)
+                    .id("2")
                     .name("Product 2")
                     .description("Description 2")
                     .price(BigDecimal.TEN)
                     .productStatus(ProductStatus.DISCONTINUED)
-                    .categoryId(2)
+                    .categoryId("2")
                     .build(),
             Product.builder()
-                    .id(3)
+                    .id("3")
                     .name("Product 3")
                     .description("Description 3")
                     .price(BigDecimal.valueOf(15))
                     .productStatus(ProductStatus.OUT_OF_STOCK)
-                    .categoryId(2)
+                    .categoryId("3")
                     .build()
         ));
 
     @Override
     public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
         Product newProduct = Product.builder()
-                .id(products.size() + Math.abs(random.nextLong()))
+                .id(UUID.randomUUID().toString())
                 .name(productRequestDto.getName())
                 .description(productRequestDto.getDescription())
                 .price(productRequestDto.getPrice())
@@ -69,12 +70,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponseDto getProductById(Long id) {
+    public ProductResponseDto getProductById(String id) {
         return productMapper.toProductResponseDto(findProductById(id));
     }
 
     @Override
-    public ProductResponseDto updateProduct(Long id, ProductRequestDto productRequestDto) {
+    public ProductResponseDto updateProduct(String id, ProductRequestDto productRequestDto) {
         Product productToUpdate = findProductById(id);
         productToUpdate.setName(productRequestDto.getName());
         productToUpdate.setDescription(productRequestDto.getDescription());
@@ -85,12 +86,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct(Long id) {
+    public void deleteProduct(String id) {
         Product productToDelete = findProductById(id);
         products.remove(productToDelete);
     }
 
-    private Product findProductById(Long id) {
+    private Product findProductById(String id) {
         return products.stream()
                 .filter(p -> p.getId() == id)
                 .findFirst()

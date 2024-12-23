@@ -6,7 +6,7 @@ import lombok.Value;
 @Value
 @Builder
 public class Category {
-    long id;
+    String id;
     String name;
     String description;
 }

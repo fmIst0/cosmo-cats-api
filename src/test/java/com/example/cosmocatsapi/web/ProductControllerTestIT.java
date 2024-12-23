@@ -35,6 +35,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -43,9 +44,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@WebMvcTest
 class ProductControllerTestIT {
-    protected static MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
     @Mock
@@ -53,43 +55,34 @@ class ProductControllerTestIT {
     @MockBean
     private ProductServiceImpl productService;
 
-    @BeforeAll
-    static void setUpBeforeClass(
-            @Autowired WebApplicationContext webApplicationContext
-    ) {
-        mockMvc = MockMvcBuilders
-                .webAppContextSetup(webApplicationContext)
-                .build();
-    }
-
     @Test
     @DisplayName("Get all products")
     void getAllProducts_ShouldReturnAllProducts() throws Exception {
         //Given
         List<ProductResponseDto> expected = new ArrayList<>(Arrays.asList(
                 ProductResponseDto.builder()
-                        .id(1)
+                        .id("1")
                         .name("Product 1")
                         .description("Description 1")
                         .price(BigDecimal.valueOf(5))
                         .productStatus(ProductStatus.IN_STOCK)
-                        .categoryId(1)
+                        .categoryId("1")
                         .build(),
                 ProductResponseDto.builder()
-                        .id(2)
+                        .id("2")
                         .name("Product 2")
                         .description("Description 2")
                         .price(BigDecimal.TEN)
                         .productStatus(ProductStatus.DISCONTINUED)
-                        .categoryId(2)
+                        .categoryId("2")
                         .build(),
                 ProductResponseDto.builder()
-                        .id(3)
+                        .id("3")
                         .name("Product 3")
                         .description("Description 3")
                         .price(BigDecimal.valueOf(15))
                         .productStatus(ProductStatus.OUT_OF_STOCK)
-                        .categoryId(2)
+                        .categoryId("2")
                         .build()
         ));
 
@@ -118,16 +111,16 @@ class ProductControllerTestIT {
                 .name("comet")
                 .description("Valid Product Description")
                 .price(BigDecimal.valueOf(20))
-                .categoryId(1)
+                .categoryId("1")
                 .productStatus(ProductStatus.IN_STOCK)
                 .build();
 
         ProductResponseDto productResponseDto = ProductResponseDto.builder()
-                .id(1)
+                .id("1")
                 .name("comet")
                 .description("Valid Product Description")
                 .price(BigDecimal.valueOf(20))
-                .categoryId(1)
+                .categoryId("1")
                 .productStatus(ProductStatus.IN_STOCK)
                 .build();
 
@@ -154,7 +147,7 @@ class ProductControllerTestIT {
                 .name("")  // Missing name
                 .description("Valid Product Description")
                 .price(BigDecimal.valueOf(20))
-                .categoryId(1)
+                .categoryId("1")
                 .productStatus(ProductStatus.IN_STOCK)
                 .build();
 
@@ -179,7 +172,7 @@ class ProductControllerTestIT {
                 .name(longName)
                 .description("Valid Product Description")
                 .price(BigDecimal.valueOf(20))
-                .categoryId(1)
+                .categoryId("1")
                 .productStatus(ProductStatus.IN_STOCK)
                 .build();
 
@@ -203,7 +196,7 @@ class ProductControllerTestIT {
                 .name("Valid Product Name")
                 .description("Valid Product Description")
                 .price(null)  // Missing price
-                .categoryId(1)
+                .categoryId("1")
                 .productStatus(ProductStatus.IN_STOCK)
                 .build();
 
@@ -251,20 +244,20 @@ class ProductControllerTestIT {
                 .name("star")
                 .description("Updated Product Description")
                 .price(BigDecimal.valueOf(25))
-                .categoryId(1)
+                .categoryId("1")
                 .productStatus(ProductStatus.OUT_OF_STOCK)
                 .build();
 
         ProductResponseDto productResponseDto = ProductResponseDto.builder()
-                .id(1)
+                .id("1")
                 .name("star")
                 .description("Updated Product Description")
                 .price(BigDecimal.valueOf(25))
-                .categoryId(1)
+                .categoryId("1")
                 .productStatus(ProductStatus.OUT_OF_STOCK)
                 .build();
 
-        Long productId = 1L; // Assuming this product exists
+        String productId = "1"; // Assuming this product exists
 
         when(productService.updateProduct(productId, productRequestDto)).thenReturn(productResponseDto);
 
@@ -291,11 +284,11 @@ class ProductControllerTestIT {
                 .name("")  // Missing name
                 .description("Updated Product Description")
                 .price(BigDecimal.valueOf(25))
-                .categoryId(1)
+                .categoryId("1")
                 .productStatus(ProductStatus.OUT_OF_STOCK)
                 .build();
 
-        Long productId = 1L; // Assuming this product exists
+        String productId = "1"; // Assuming this product exists
 
         // When
         MvcResult result = mockMvc.perform(put("/api/v1/products/{id}", productId)
@@ -317,11 +310,11 @@ class ProductControllerTestIT {
                 .name("Updated Product Name")
                 .description("Updated Product Description")
                 .price(null)  // Missing price
-                .categoryId(1)
+                .categoryId("1")
                 .productStatus(ProductStatus.OUT_OF_STOCK)
                 .build();
 
-        Long productId = 1L; // Assuming this product exists
+        String productId = "1"; // Assuming this product exists
 
         // When
         MvcResult result = mockMvc.perform(put("/api/v1/products/{id}", productId)
@@ -339,14 +332,14 @@ class ProductControllerTestIT {
     @DisplayName("Get product by ID")
     void getProductById_ShouldReturnProduct() throws Exception {
         // Given
-        Long productId = 1L; // Assuming this product exists
+        String productId = "1"; // Assuming this product exists
 
         ProductResponseDto productResponseDto = ProductResponseDto.builder()
-                .id(1)
+                .id("1")
                 .name("star")
                 .description("Updated Product Description")
                 .price(BigDecimal.valueOf(25))
-                .categoryId(1)
+                .categoryId("1")
                 .productStatus(ProductStatus.OUT_OF_STOCK)
                 .build();
 
@@ -368,7 +361,7 @@ class ProductControllerTestIT {
     @DisplayName("Get product by non-existent ID")
     void getProductById_ProductNotFound_ShouldReturnNotFound() throws Exception {
         // Given
-        Long nonExistentProductId = 999L; // Assuming this product does not exist
+        String nonExistentProductId = "999"; // Assuming this product does not exist
 
         when(productService.getProductById(nonExistentProductId)).thenThrow(ProductNotFoundException.class);
 
@@ -384,7 +377,7 @@ class ProductControllerTestIT {
     @DisplayName("Delete product by ID")
     void deleteProduct_ShouldReturnNoContent() throws Exception {
         // Given
-        Long productId = 1L; // Assuming this product exists
+        String productId = "1"; // Assuming this product exists
 
         // When
         mockMvc.perform(delete("/api/v1/products/{id}", productId))
@@ -396,7 +389,7 @@ class ProductControllerTestIT {
     @DisplayName("Delete product with non-existent ID")
     void deleteProduct_ProductNotFound_ShouldReturnNotFound() throws Exception {
         // Given
-        Long nonExistentProductId = 999L; // Assuming this product does not exist
+        String nonExistentProductId = "999"; // Assuming this product does not exist
 
         when(productService.getProductById(nonExistentProductId)).thenThrow(ProductNotFoundException.class);
 

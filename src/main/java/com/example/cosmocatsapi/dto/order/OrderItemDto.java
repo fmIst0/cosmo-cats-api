@@ -2,9 +2,11 @@ package com.example.cosmocatsapi.dto.order;
 
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import lombok.Builder;
 import lombok.Value;
 
 @Value
+@Builder
 public class OrderItemDto {
     @NotNull(message = "Product name cannot be null")
     String product;

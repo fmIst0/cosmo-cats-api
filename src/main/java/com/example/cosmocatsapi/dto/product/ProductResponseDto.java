@@ -8,10 +8,10 @@ import lombok.Value;
 @Value
 @Builder
 public class ProductResponseDto {
-    long id;
+    String id;
     String name;
     String description;
     BigDecimal price;
     ProductStatus productStatus;
-    long categoryId;
+    String categoryId;
 }
