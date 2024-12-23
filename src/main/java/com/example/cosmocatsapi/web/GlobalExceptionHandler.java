@@ -2,6 +2,7 @@ package com.example.cosmocatsapi.web;
 
 import static com.example.cosmocatsapi.web.utils.DetailsUtils.getValidationErrors;
 
+import com.example.cosmocatsapi.featuretoggle.exception.FeatureNotEnabledException;
 import com.example.cosmocatsapi.service.exception.ProductNotFoundException;
 import com.example.cosmocatsapi.web.exception.ExDetails;
 import java.net.URI;
@@ -28,6 +29,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         problemDetail.setType(URI.create("product-not-found"));
         problemDetail.setTitle("Product Not Found");
+        return problemDetail;
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(FeatureNotEnabledException.class)
+    public ProblemDetail handleFeatureToggleNotEnabledException(FeatureNotEnabledException ex) {
+        ProblemDetail problemDetail =
+                ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problemDetail.setType(URI.create("feature-disabled"));
+        problemDetail.setTitle("Feature Is Disabled");
         return problemDetail;
     }
 

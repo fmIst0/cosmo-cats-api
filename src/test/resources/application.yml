@@ -5,3 +5,8 @@ spring:
 tests:
   unit-tests:
     enabled: true
+
+feature:
+  toggles:
+    cosmo-cats: true
+    kitty-products: false
