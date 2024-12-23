@@ -23,8 +23,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -62,8 +61,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -111,8 +109,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -259,10 +256,9 @@
             "type": "number"
           },
           "categoryId": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string"
           },
-          "status": {
+          "productStatus": {
             "type": "string",
             "enum": [
               "IN_STOCK",
@@ -277,8 +273,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           },
           "name": {
             "type": "string"
@@ -299,8 +294,7 @@
             ]
           },
           "categoryId": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           }
         }
       }
